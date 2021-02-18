@@ -1,0 +1,31 @@
+{
+  "name": "wbr_v3_react",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --hot --disable-host-check --https",
+    "build": "webpack -P"
+  },
+  "dependencies": {
+    "@looker/components": "^0.11.0",
+    "core-js": "^3.8.3",
+    "highcharts": "^8.2.0",
+    "highcharts-react-official": "^3.0.0",
+    "lodash": "^4.17.20",
+    "react": "^17.0.1",
+    "react-beautiful-dnd": "^13.0.0",
+    "react-dom": "^17.0.1",
+    "react-is": "^16.13.1",
+    "styled-components": "^5.2.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "babel-loader": "^8.1.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}
