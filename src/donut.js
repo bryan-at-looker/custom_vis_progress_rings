@@ -26,7 +26,7 @@ const OPTIONS = {
       cursor: 'pointer',
       dataLabels: {
         enabled: true,
-        format: '<b>{point.name}</b><br/>{point.percentage:.1f}%<br/>{point.rendered_y}'
+        distance: '-15%',
       }
     }
   },
@@ -77,8 +77,8 @@ export const App = (props) => {
           size: height - 100 - MARGIN[text_size],
           dataLabels: {
             padding: 0,
-            enabled: (point_format.length),
-            format: point_format.join('<br/>')
+            enabled: (point_format.length ),
+            format: (data[measures[0].name].value!==0) ? point_format.join('<br/>') : ''
           }
         }
       },
@@ -133,7 +133,7 @@ export const App = (props) => {
     >
       <FloatingText 
         fontSize={text_size || "small"}
-        font_color={config.font_color}
+        font_color={pieColors[chart_num]}
         lineHeight="small"
         dangerouslySetInnerHTML={{__html}}
       />
