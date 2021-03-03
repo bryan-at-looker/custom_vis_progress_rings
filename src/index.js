@@ -19,6 +19,14 @@ looker.plugins.visualizations.add({
       order: 1,
       display_size: "half",
     },
+    font_color: {
+      type: "string",
+      label: "Font Color",
+      display: "color",
+      default: "#000000",
+      order: 12,
+      display_size: "half",
+    },
     inner_radius: {
       type: "number",
       label: "Inner Radius",
@@ -99,10 +107,14 @@ looker.plugins.visualizations.add({
   },
   // Set up the initial state of the visualization
   create: function(element, config) {
-
-    // Insert a <style> tag with some styles we'll use later.
-    element.innerHTML = `
-      <style>
+    const style = document.createElement('style');
+    style.innerHTML = `
+        body {
+          background-color: transparent !important;
+        }
+        svg {
+          font-family: 'Roboto','Noto Sans JP','Noto Sans CJK KR','Noto Sans Arabic UI','Noto Sans Devanagari UI','Noto Sans Hebrew','Noto Sans Thai UI','Helvetica','Arial',sans-serif;
+        }
         #vis {
           /* Vertical centering */
           height: 100vh;
@@ -113,9 +125,8 @@ looker.plugins.visualizations.add({
           text-align: center;
           margin: 0;
         }
-      </style>
-    `;
-
+    `
+    document.getElementsByTagName('head')[0].appendChild(style)
     const vis = document.getElementById('vis')
     this._vis = vis
     
@@ -129,7 +140,6 @@ looker.plugins.visualizations.add({
   },
   // Render in response to the data or settings changing
   updateAsync: function(data, element, config, queryResponse, details, done) {
-    
     // Clear any errors from previous updates
     this.clearErrors();
 

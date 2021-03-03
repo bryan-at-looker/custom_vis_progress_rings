@@ -12,7 +12,9 @@ const MARGIN = {
 
 const OPTIONS = {
   chart: {
-    type: "pie"
+    type: "pie",
+    borderColor: 'blue',
+    backgroundColor: 'transparent'
   },
   title: null,
   tooltip: {
@@ -72,7 +74,7 @@ export const App = (props) => {
         ...OPTIONS.plotOptions,
         pie: {
           ...OPTIONS.plotOptions.pie,
-          size: height - ( MARGIN[text_size] + (config.show_values)? 10 : 0) - 100,
+          size: height - 100 - MARGIN[text_size],
           dataLabels: {
             padding: 0,
             enabled: (point_format.length),
@@ -86,11 +88,15 @@ export const App = (props) => {
           '',
         align: 'center',
         verticalAlign: 'middle',
+        style: {color: config.font_color}
       },
       chart: {
         ...OPTIONS.chart,
-        height: height - ( MARGIN[text_size] + (config.show_values)? 10 : 0),
+        height: height - 100,
         width,
+        style: {
+          color: config.font_color
+        }
       },
       series: {
         name: '',
@@ -102,12 +108,16 @@ export const App = (props) => {
               event: event
             });
           },
-        },      
+        },  
+        dataLabels: {
+          enabled: true,
+          color: config.font_color
+        },    
         data: [measures[0], measures[2]].map((m,j)=>{
           return {
             name: m.label_short || m.label,
-            y: data[m.name].value || data[m.name] || 0,
-            rendered_y: data[m.name].rendered || data[m.name].value || 0,
+            y: data[m.name].value || 0,
+            rendered_y: data[m.name].rendered || `${data[m.name].value}` || `0`,
             links: data[m.name].links || [],
             color: (j===0) ? pieColors[chart_num] : `${brightenColor(pieColors[chart_num])}`
           }
@@ -123,6 +133,7 @@ export const App = (props) => {
     >
       <FloatingText 
         fontSize={text_size || "small"}
+        font_color={config.font_color}
         lineHeight="small"
         dangerouslySetInnerHTML={{__html}}
       />
@@ -135,8 +146,8 @@ export const App = (props) => {
 }
 
 const FloatingText = styled(Text)`
+  color: ${props=>props.font_color};
   width: 100%;
-  position: absolute;
   top: 0;
   left: 0;
   z-index: 10;
