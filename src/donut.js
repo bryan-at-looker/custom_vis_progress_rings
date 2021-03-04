@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
-import { Flex, Grid, Heading, Label, Text } from '@looker/components'
+import { Flex, Text } from '@looker/components'
 import styled from 'styled-components'
+import { find } from 'lodash'
 
 const MARGIN = {
   'small': 10,
   'medium': 15,
   'large': 20
 }
+
+
 
 const OPTIONS = {
   chart: {
@@ -37,8 +40,24 @@ const OPTIONS = {
 export const App = (props) => {
   const {data, dimensions, text_size, measures, height, width, config, labels, chart_num} = props
 
+  const { field_value_color, no_value_color } = config
+
 
   const [options, setOptions] = useState(OPTIONS)
+  const pickColor = (chart_num, dt) => {
+    const value = dt[dimensions[0].name].value
+    const measure = dt[measures[0].name].value
+    if (measure === 0) {
+      return no_value_color
+    }
+    if (value && value.length) {
+      const found = find(field_value_color, {value})
+      if (found) {
+        return found.color
+      }
+    }
+    return pieColors[chart_num]
+  }
   var pieColors = (function () {
     var colors = [],
         base = config.color_range || ["#FFBA00", "#F56F02", "#CB1F47", "#645DAC", "#0088D2", "#00B345"],
@@ -119,7 +138,7 @@ export const App = (props) => {
             y: data[m.name].value || 0,
             rendered_y: data[m.name].rendered || `${data[m.name].value}` || `0`,
             links: data[m.name].links || [],
-            color: (j===0) ? pieColors[chart_num] : `${brightenColor(pieColors[chart_num])}`
+            color: (j===0) ? pickColor(chart_num,data) : `${brightenColor(pickColor(chart_num,data))}`
           }
         })
       }
@@ -133,7 +152,7 @@ export const App = (props) => {
     >
       <FloatingText 
         fontSize={text_size || "small"}
-        font_color={pieColors[chart_num]}
+        font_color={pickColor(chart_num,data)}
         lineHeight="small"
         dangerouslySetInnerHTML={{__html}}
       />

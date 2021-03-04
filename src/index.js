@@ -12,6 +12,7 @@ looker.plugins.visualizations.add({
   label: "React Test",
   options: {
     color_range: {
+      section: "1. Main",
       type: "array",
       label: "Color Range",
       display: "colors",
@@ -20,6 +21,7 @@ looker.plugins.visualizations.add({
       display_size: "half",
     },
     font_color: {
+      section: "1. Main",
       type: "string",
       label: "Font Color",
       display: "color",
@@ -27,7 +29,17 @@ looker.plugins.visualizations.add({
       order: 12,
       display_size: "half",
     },
+    no_value_color: {
+      section: "1. Main",
+      type: "string",
+      label: "Font Color",
+      display: "color",
+      default: "#3a3a3a",
+      order: 15,
+      display_size: "half",
+    },
     inner_radius: {
+      section: "1. Main",
       type: "number",
       label: "Inner Radius",
       min: 0,
@@ -37,6 +49,7 @@ looker.plugins.visualizations.add({
       display_size: "half",
     },
     num_columns: {
+      section: "1. Main",
       type: "number",
       label: "Columns",
       min: 1,
@@ -45,6 +58,7 @@ looker.plugins.visualizations.add({
       order: 5
     },
     num_rows: {
+      section: "1. Main",
       type: "number",
       label: "Rows",
       min: 1,
@@ -53,6 +67,7 @@ looker.plugins.visualizations.add({
       order: 4
     },
     text_size: {
+      section: "1. Main",
       type: "string",
       label: "Label Size",
       display: "select",
@@ -65,6 +80,7 @@ looker.plugins.visualizations.add({
       order: 6
     },
     show_measure: {
+      section: "1. Main",
       type: "boolean",
       display: "radio",
       display_size: "half",
@@ -73,6 +89,7 @@ looker.plugins.visualizations.add({
       order: 10
     },
     show_percent: {
+      section: "1. Main",
       type: "boolean",
       display: "radio",
       display_size: "half",
@@ -81,6 +98,7 @@ looker.plugins.visualizations.add({
       order: 11
     },
     show_value: {
+      section: "1. Main",
       type: "boolean",
       display: "radio",
       display_size: "half",
@@ -89,6 +107,7 @@ looker.plugins.visualizations.add({
       order: 12
     },
     show_percent_center: {
+      section: "1. Main",
       type: "boolean",
       display: "radio",
       display_size: "half",
@@ -97,6 +116,7 @@ looker.plugins.visualizations.add({
       order: 13
     },
     show_values: {
+      section: "1. Main",
       type: "boolean",
       display: "radio",
       display_size: "half",
@@ -104,6 +124,30 @@ looker.plugins.visualizations.add({
       default: true,
       order: 14
     },
+    field_value_color: {
+      order: 1,
+      section: "2. Colors",
+      type: "object_list",
+      label: "Items",
+      newItem: {
+        color: "#a6a6a6",
+        value: ""
+      },
+      options: {
+        color: {
+          type: 'string',
+          display: 'color',
+          label: "Color",
+          order: 1,
+          default: "#a6a6a6"
+        },
+        value: {
+          type: 'string',
+          label: "Value",
+          order: 2
+        }
+      }
+    }
   },
   // Set up the initial state of the visualization
   create: function(element, config) {
@@ -180,7 +224,7 @@ looker.plugins.visualizations.add({
     const sliced_data = data.slice(0,rows*columns);
     const {show_measure, show_value, show_percent, show_percent_center} = config
     const labels = {show_measure, show_value, show_percent, show_percent_center} 
-    console.log({gridHeight: element.offsetHeight/rows, elementHeight: element.offsetHeight})
+    
     this.chart = ReactDOM.render(
       <ComponentsProvider>
         <StyledGrid columns={columns}>
