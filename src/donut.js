@@ -21,7 +21,7 @@ const OPTIONS = {
   },
   title: null,
   tooltip: {
-    pointFormat: '<b>{point.name}</b><br/>{point.percentage:.1f}%<br/>{point.rendered_y}'
+    pointFormat: `<b>{point.name}</b><br/>{point.percentage:.1f}%<br/>{point.rendered_y}`
   },
   plotOptions: {
     pie: {
@@ -84,7 +84,7 @@ export const App = (props) => {
   useEffect(()=>{
     let point_format = []
     if (labels.show_measure) point_format.push("<b>{point.name}</b>")
-    if (labels.show_percent) point_format.push("{point.percentage:.1f}%")
+    if (labels.show_percent) point_format.push(`{point.percentage:.${config.percentage_decimal_points}f}%`)
     if (labels.show_value) point_format.push("{point.rendered_y}")
     
     setOptions({
@@ -103,11 +103,14 @@ export const App = (props) => {
       },
       title: {
         text: (labels.show_percent_center) ? 
-        textData(data, measures, text_size) :
+        textData(data, measures, text_size, config.percentage_decimal_points) :
           '',
         align: 'center',
         verticalAlign: 'middle',
         style: {color: config.font_color}
+      },
+      tooltip: {
+        pointFormat: `<b>{point.name}</b><br/>{point.percentage:.${config.percentage_decimal_points}f}%<br/>{point.rendered_y}`
       },
       chart: {
         ...OPTIONS.chart,
@@ -122,10 +125,21 @@ export const App = (props) => {
         innerSize: (config.inner_radius) ? `${config.inner_radius}%` : '50%',
         events: {
           click: function(event) {
-            LookerCharts.Utils.openDrillMenu({
-              links: event.point.links,
-              event: event
-            });
+            if (event.point.links.length === 1 && window.parent.parent) {
+              LookerCharts.Utils.openDrillMenu({
+                links: event.point.links,
+                event: event
+              });
+              // console.log(event.point.links[0])
+              // LookerCharts.Utils.openUrl(event.point.links[0].url, event, true, {})
+              // // window.parent.parent.postMessage({help: 123})
+            } else {
+              LookerCharts.Utils.openDrillMenu({
+                links: event.point.links,
+                event: event
+              });
+            }
+            
           },
         },  
         dataLabels: {
@@ -154,6 +168,12 @@ export const App = (props) => {
         fontSize={text_size || "small"}
         font_color={pickColor(chart_num,data)}
         lineHeight="small"
+        onClick={(event)=>{
+          LookerCharts.Utils.openDrillMenu({
+            links: data[measures[0].name].links,
+            event: event
+          });
+        }}
         dangerouslySetInnerHTML={{__html}}
       />
       <HighchartsReact
@@ -173,7 +193,7 @@ const FloatingText = styled(Text)`
 }
 `
 
-const textData = (data, measures, text_size) => {
+const textData = (data, measures, text_size, percentage_decimal_points) => {
   const val1 = data[measures[0].name].value;
   const total = data[measures[1].name].value; 
   const percent = val1/total;
@@ -182,6 +202,6 @@ const textData = (data, measures, text_size) => {
   if (!total || total === 0) {
     return `<h2 style="${style}">0%</h2>`; 
   } else {
-    return `<h2 style="${style}">${percent.toLocaleString(undefined,{ style: 'percent', minimumFractionDigits:1 })}</h2>`; 
+    return `<h2 style="${style}">${percent.toLocaleString(undefined,{ style: 'percent', minimumFractionDigits: percentage_decimal_points })}</h2>`; 
   }
 }

@@ -124,6 +124,16 @@ looker.plugins.visualizations.add({
       default: true,
       order: 14
     },
+    percentage_decimal_points: {
+      section: "1. Main",
+      type: "number",
+      label: "Decimal Points",
+      order: 15,
+      display_size: "half",
+      default: 0,
+      min: 0,
+      max: 10
+    },
     field_value_color: {
       order: 1,
       section: "2. Colors",
@@ -161,7 +171,7 @@ looker.plugins.visualizations.add({
         }
         #vis {
           /* Vertical centering */
-          height: 100vh;
+          height: 95vh;
           width: 100vw;
           display: flex;
           flex-direction: column;
